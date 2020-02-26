@@ -1,9 +1,7 @@
 function mask = simpleSegmentation(img,cellSize,minIntensity)
 % Very simple segmentation routine based on a local thresholding.
-% Normalizes image to the dilation and thresholds using 0.9 of max
-% Need to specify an object (cell) size 
-% Can specifiy a minimum threshold for pixels to be included (optional)
-% Returns a binary mask 
+% Normalizes image to the dilation and thresholds
+% can specifiy a minimum threshold for 
 
 img_max = imdilate(img,strel('disk',cellSize));
 

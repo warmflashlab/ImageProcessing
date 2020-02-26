@@ -1,2 +1,23 @@
 # ImageProcessing
-Code for processing microscopy images for the Warmflash lab at Rice University
+Code for analyzing microscopy images. Developed by the Warmflash lab at Rice University
+
+## Overview
+
+
+## Useful Routines
+
+
+###High level scripts
+analyseOneColonyOneImageLSM   
+
+###data classes
+Metadata - useful for storing information about image   
+MetadataMicropattern - metadata subclass for micropatterned experiment
+
+
+
+###Utilities   
+MakeMaxZImage - max z projection   
+splitLargeImageFile - split big tiled image to smaller ones for analysis
+
+
