@@ -5,18 +5,14 @@ Code for analyzing microscopy images. Developed by the Warmflash lab at Rice Uni
 
 
 ## Useful Routines
-
-
-###High level scripts
+**High level scripts**   
 analyseOneColonyOneImageLSM   
 
-###data classes
+**Data classes**  
 Metadata - useful for storing information about image   
 MetadataMicropattern - metadata subclass for micropatterned experiment
 
-
-
-###Utilities   
+**Utilities**   
 MakeMaxZImage - max z projection   
 splitLargeImageFile - split big tiled image to smaller ones for analysis
 
