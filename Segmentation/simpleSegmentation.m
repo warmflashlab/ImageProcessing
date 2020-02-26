@@ -1,6 +1,5 @@
 function mask = simpleSegmentation(img,cellSize,minIntensity)
 
-%img_sm = smoothImage(img,floor(cellSize/3),floor(cellSize/6));
 
 img_max = imdilate(img,strel('disk',cellSize));
 
