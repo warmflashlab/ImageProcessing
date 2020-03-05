@@ -1,4 +1,4 @@
-function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwindow,toplabels,sidelabels)
+function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwindow,toplabels,sidelabels,mkMerge)
 %Function to make composite image comparing multi-channel images each
 %channel on a consistent look up table. 
 % imgs = cell array of multichannel images (mxnxq array where mxn is image
@@ -20,10 +20,24 @@ function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwin
 
 
 nchan = min(cellfun(@(x) size(x,3), imgs)); %minimum of chan numbers
+
+
 if ~exist('condToUseForChan','var')  || isempty(condToUseForChan)
     condToUseForChan = ones(nchan,1);
 end
 nimgs = length(imgs);
+
+if ~exist('mkMerge','var')
+    mkMerge = false;
+end
+
+if mkMerge
+    nchan = nchan + 1;
+    for ii = 1:nimgs
+        merges{ii} = [];
+    end
+end
+
 q = 1;
 
 ax = axes('Units','normalized', ...
@@ -44,6 +58,9 @@ if exist('toplabels','var')
 end
 
 if exist('sidelabels','var')
+    if mkMerge
+        sidelabels{end+1} = 'Merge';
+    end
     for ii = 1:nchan
         xpos = pos{(ii-1)*nimgs+1}(1)-0.013;
         ypos = pos{(ii-1)*nimgs+1}(2)+pos{(ii-1)*nimgs+1}(4)/2-0.02;
@@ -55,7 +72,7 @@ if ~exist('limToUseForChan','var') || isempty(limToUseForChan)
     limToUseForChan = [zeros(nchan,1) ones(nchan,1)];
 end
 
-for chan = 1:nchan
+for chan = 1:nchan-1
     if limToUseForChan(chan,2) <= 1
         lims = stretchlim(imgs{condToUseForChan(chan)}(:,:,chan),limToUseForChan(chan,:));
     else
@@ -69,6 +86,16 @@ for chan = 1:nchan
             imgToUse = imcrop(imgToUse,cropwindow);
         end
         imshow(imadjust(imgToUse,lims));
+        if mkMerge
+            merges{ii} = cat(3,merges{ii},imadjust(imgToUse,lims));
+        end
         q = q + 1;
     end
+    
 end
+for ii = 1:nimgs
+    axes(ha(q));
+    imshow(merges{ii});
+    q = q + 1;
+end
+
