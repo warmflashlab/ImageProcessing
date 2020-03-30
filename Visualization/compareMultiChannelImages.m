@@ -13,7 +13,8 @@ function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwin
 % strings
 % sidelabels - labels on side, correspond to channels, cell array of
 % strings
-%
+% mkMerge - set to true to include a merge image, default false
+
 % requires tight_subplot from matlabcentral 
 % to fix - limToUseForChan syntax unclear. 
 
