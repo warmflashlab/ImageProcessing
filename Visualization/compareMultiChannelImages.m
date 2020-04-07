@@ -1,7 +1,7 @@
 function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwindow,toplabels,sidelabels,mkMerge)
 %Function to make composite image comparing multi-channel images each
 %channel on a consistent look up table. 
-% imgs = cell array of multichannel images (mxnxq array where mxn is image
+% imgs = cell array of multichannel images (m x n x q array where m x n is image
 % size and q is number of channels). 
 % condToUseForChan - vector of integers, lenght of number of channels. Each
 % entry is the condition to use to set the limits for that channel (optional; 
@@ -54,6 +54,7 @@ if exist('toplabels','var')
     for ii = 1:nimgs
         xpos = pos{ii}(1)+pos{ii}(3)/2-0.01*length(toplabels{ii})/2;
         ypos = pos{ii}(2)+pos{ii}(4)+0.013;
+        
         text(xpos,ypos,toplabels{ii},'Color','k','FontSize',24);
     end
 end
