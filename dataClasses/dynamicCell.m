@@ -6,14 +6,17 @@ classdef dynamicCell
     % ---------------------
 
     properties
+        frameId
         cellId
         fluorData
         mother
         daughter 
         sister
+        divisionFrame
     end
     
     methods
         
         
-    end 
+    end  
+end 
