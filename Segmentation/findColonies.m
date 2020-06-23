@@ -44,11 +44,18 @@ function [colonies, cleanmask, welllabel] = findColonies(mask, range, meta, clpa
     end
     cleanmask = mask(range(3):range(4),range(1):range(2));
     
-    cleanmask = imclose(cleanmask,strel('disk',clparameters.sclose));
-    cleanmask = imfill(cleanmask,'holes');
-    cleanmask = bwareaopen(cleanmask,clparameters.minArea);
-    cleanmask = imopen(cleanmask,strel('disk',clparameters.sopen));
-    cleanmask = bwareaopen(cleanmask,clparameters.minArea);
+%     cleanmask = imclose(cleanmask,strel('disk',clparameters.sclose));
+%     cleanmask = imfill(cleanmask,'holes');
+%     cleanmask = bwareaopen(cleanmask,clparameters.minArea);
+%     cleanmask = imopen(cleanmask,strel('disk',clparameters.sopen));
+%     cleanmask = bwareaopen(cleanmask,clparameters.minArea);
+
+cleanmask = imopen(cleanmask,strel('disk',clparameters.sopen));
+cleanmask = imclose(cleanmask,strel('disk',clparameters.sclose));
+cleanmask = imfill(cleanmask,'holes');
+cleanmask = bwareaopen(cleanmask,clparameters.minArea);
+
+
 
     if clparameters.convhull
         cleanmask = bwconvhull(cleanmask);

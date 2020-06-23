@@ -84,6 +84,8 @@ function colony = processOneColonyImage(filename, dataDir, varargin)
     
     disp('process individual colonies')
     b = colony.boundingBox;
+    
+    b(b < 1) = 1; %AW added 
     colnucmask = mask(b(3):b(4),b(1):b(2));
     colimg = IP(b(3):b(4),b(1):b(2),:);
     colony.makeRadialAvgNoSeg(colimg, colnucmask,[], meta.colMargin)
