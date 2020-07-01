@@ -346,10 +346,8 @@ classdef Colony < Position
 %                 colnucbinmask = find(radialMaskStack{colType}(:,:,ri) & colnucmask);
 %                 colcytbinmask = find(radialMaskStack{colType}(:,:,ri) & colcytmask);
                 
-% use binary to make it easier later
+% use binary to make it easier late
 
-                 colnucbinmask = radialMaskStack{colType}(:,:,ri) & colnucmask;
-                 colcytbinmask = radialMaskStack{colType}(:,:,ri) & colcytmask;
         % we only want to measure if there is something there
                 npix = sum(sum((colnucmask | colcytmask) & radialMaskStack{colType}(:,:,ri)));
                 npixTot = sum(sum(radialMaskStack{colType}(:,:,ri)));

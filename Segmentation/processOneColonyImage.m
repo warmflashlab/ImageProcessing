@@ -52,6 +52,10 @@ function colony = processOneColonyImage(filename, dataDir, varargin)
     else
         error('specify DAPI channel');
     end
+    
+    if isfield(in_struct,'thresh')
+        thresh = in_struct.thresh;
+    end
 
     %---------------------
     
@@ -88,7 +92,11 @@ function colony = processOneColonyImage(filename, dataDir, varargin)
     b(b < 1) = 1; %AW added 
     colnucmask = mask(b(3):b(4),b(1):b(2));
     colimg = IP(b(3):b(4),b(1):b(2),:);
-    colony.makeRadialAvgNoSeg(colimg, colnucmask,[], meta.colMargin)
+    if exist('thresh','var')
+        colony.makeRadialAvgNoSeg(colimg, colnucmask,[], meta.colMargin,1,thresh)
+    else
+        colony.makeRadialAvgNoSeg(colimg, colnucmask,[], meta.colMargin)
+    end
     
     disp('save mask');
     imshow(cat(3,mask,cleanmask,0*mask))
