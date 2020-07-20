@@ -20,8 +20,11 @@ r = imfilter(colonies(1).radialProfile.BinEdges,[1 1]/2)*meta.xres;
 r(1) = colonies(1).radialProfile.BinEdges(1)*meta.xres;
 r = r(1:end-1);
 colCat = cat(3,colonies(:).radialProfile);
+ncol = length(colonies);
 
 nucAvgAll = mean(cat(3,colCat.NucAvg),3);
+nucStdAll = std(cat(3,colCat.NucAvg),[],3)/sqrt(ncol);
+
 if ~isempty(DAPIChannel)
     nucAvgAllDAPINormalized = bsxfun(@rdivide, nucAvgAll, nucAvgAll(:,DAPIChannel));
 
@@ -38,6 +41,6 @@ output = struct('nucAvg', nucAvgAll,...
                 'nucAvgDAPINormalized', nucAvgAllDAPINormalized,...
                 'nucAvgDAPImaxNormalized', nucAvgDoubleNormalized,...
                 'r',r,...
-                'colSize',colSize);
+                'colSize',colSize,'nucStd',nucStdAll);
             
 
