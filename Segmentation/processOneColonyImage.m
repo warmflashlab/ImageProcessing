@@ -37,7 +37,7 @@ function colony = processOneColonyImage(filename, dataDir, varargin)
         adjustmentFactor = in_struct.adjustmentFactor;
     end
     if isfield(in_struct,'cleanScale')
-        s = round(in_struct.cleanScale/meta.xres);
+        s = in_struct.cleanScale;
     end
     
     if isfield(in_struct,'clparameters')
@@ -90,8 +90,25 @@ function colony = processOneColonyImage(filename, dataDir, varargin)
     b = colony.boundingBox;
     
     b(b < 1) = 1; %AW added 
+    
+    si = size(squeeze(img(:,:,1)));
+    
+    if b(4) > si(1)
+        b(4) = si(1);
+    end
+    
+    if b(2) > si(2)
+        b(2) = si(2);
+    end
+    
     colnucmask = mask(b(3):b(4),b(1):b(2));
     colimg = IP(b(3):b(4),b(1):b(2),:);
+    
+    if exist('s','var')
+        colimg = backGroundSubImOpen(colimg,4*s);
+        %colimg = imfilter(colimg,fspecial('gaussian',s,floor(s/3)));
+    end
+    
     if exist('thresh','var')
         colony.makeRadialAvgNoSeg(colimg, colnucmask,[], meta.colMargin,1,thresh)
     else
