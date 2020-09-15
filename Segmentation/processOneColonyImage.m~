@@ -56,12 +56,6 @@ function colony = processOneColonyImage(filename, dataDir, varargin)
     if isfield(in_struct,'thresh')
         thresh = in_struct.thresh;
     end
-    
-    if isfield(in_struct,'prenormImage')
-        prenormImage = in_struct.prenormImage;
-    else
-        prenormImage = false;
-    end
 
     %---------------------
     
@@ -113,9 +107,7 @@ function colony = processOneColonyImage(filename, dataDir, varargin)
     if(prenormImage)
         dapi = colimg(:,:,DAPIChannel);
         for ii = 1:size(colimg,3)
-            colimg(:,:,ii) = normalizeImageToDAPI(colimg(:,:,ii),dapi,2*clparameters.sopen);
-        end
-    end
+            colimg(:,:,ii) = 
     
     if exist('s','var')
         colimg = backGroundSubImOpen(colimg,4*s);

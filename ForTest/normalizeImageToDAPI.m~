@@ -1,0 +1,11 @@
+function nImg = normalizeImageToDAPI(img,dapi,rSum)
+
+newimg = im2double(img);
+dapiimg = im2double(dapi);
+
+flt = fspecial('disk',rSum);
+
+flt = flt > 0;
+
+newimg = imfilter(newimg,flt,'replicate');
+dapiimg 
