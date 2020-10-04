@@ -19,6 +19,11 @@ classdef Position < handle
         % - nucLevelAvg
         % - cytLevelAvg
         
+        pixAvgData % structure indexed by time. only pixel-wise averages. no cells
+        % -nucAvg (nchan vector)
+        % -nucPlusCytAvg 
+        % -cytAvg 
+        
         timeTraces          % structure: reorganizes cellData
         % - nucLevelAvg:    vector indexed by time
         % - cytLevelAvg
