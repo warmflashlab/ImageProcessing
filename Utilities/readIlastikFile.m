@@ -12,14 +12,17 @@ end
 immask = h5read(filename, '/exported_data');
 immask = squeeze(immask);
 
+si = size(immask);
+nd = ndims(immask);
+perm_array = 1:nd;
+perm_array(1:2) = [ 2 1];
+
+
+
 mask = immask > 1;
 if complement
     mask = imcomplement(mask);
 end
 
+mask = permute(mask,perm_array);
 
-for ii = 1:size(mask,3)
-    mask2(:,:,ii) = mask(:,:,ii)';
-end
-
-mask = mask2;

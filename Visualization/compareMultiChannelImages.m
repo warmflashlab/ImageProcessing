@@ -1,11 +1,11 @@
 function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwindow,toplabels,sidelabels,mkMerge)
 %Function to make composite image comparing multi-channel images each
-%channel on a consistent look up table. 
+%channel on a consistent look up table.
 % imgs = cell array of multichannel images (m x n x q array where m x n is image
-% size and q is number of channels). 
+% size and q is number of channels).
 % condToUseForChan - vector of integers, lenght of number of channels. Each
-% entry is the condition to use to set the limits for that channel (optional; 
-% default is 1st condition for all). 
+% entry is the condition to use to set the limits for that channel (optional;
+% default is 1st condition for all).
 % limToUseForChan - lim to use for imadjust. Default [0 1].
 % cropwindow - coordinates of window for cropping (same for all images).
 % see imcrop for definition
@@ -15,8 +15,8 @@ function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwin
 % strings
 % mkMerge - set to true to include a merge image, default false
 
-% requires tight_subplot from matlabcentral 
-% to fix - limToUseForChan syntax unclear. 
+% requires tight_subplot from matlabcentral
+% to fix - limToUseForChan syntax unclear.
 
 
 
@@ -74,7 +74,7 @@ if ~exist('limToUseForChan','var') || isempty(limToUseForChan)
     limToUseForChan = [zeros(nchan,1) ones(nchan,1)];
 end
 
-for chan = 1:nchan-1
+for chan = 1:nchan
     if limToUseForChan(chan,2) <= 1
         lims = stretchlim(imgs{condToUseForChan(chan)}(:,:,chan),limToUseForChan(chan,:));
     else
@@ -95,9 +95,13 @@ for chan = 1:nchan-1
     end
     
 end
-for ii = 1:nimgs
-    axes(ha(q));
-    imshow(merges{ii});
-    q = q + 1;
+if mkMerge
+    
+    for ii = 1:nimgs
+        axes(ha(q));
+        imshow(merges{ii});
+        
+        q = q + 1;
+    end
 end
 
