@@ -66,7 +66,7 @@ for i = 1:n
         plot(r{i}, radialAvgNuc{i}(:,chansToPlot),'.-','LineWidth',3)
     end
     axis([min(r{i}) max(r{i}) 0 1]);
-    legend(meta.channelLabel(chansToPlot));
+    legend(meta.channelLabel(chansToPlot),'Location','Best');
     title(conditions{i})
     
     axis square

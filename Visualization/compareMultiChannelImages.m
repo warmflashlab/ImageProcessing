@@ -74,7 +74,13 @@ if ~exist('limToUseForChan','var') || isempty(limToUseForChan)
     limToUseForChan = [zeros(nchan,1) ones(nchan,1)];
 end
 
-for chan = 1:nchan
+if mkMerge 
+    upLim = nchan -1;
+else
+    upLim = nchan;
+end
+
+for chan = 1:upLim
     if limToUseForChan(chan,2) <= 1
         lims = stretchlim(imgs{condToUseForChan(chan)}(:,:,chan),limToUseForChan(chan,:));
     else
@@ -87,9 +93,25 @@ for chan = 1:nchan
         if exist('cropwindow','var') && ~isempty(cropwindow)
             imgToUse = imcrop(imgToUse,cropwindow);
         end
-        imshow(imadjust(imgToUse,lims));
+        
+        imgToUse = im2double(imadjust(imgToUse,lims));
+        
+        yx=[2048 2048]; %This is just [1024,1024] it it's a standard image
+        
+        humbar=307; % 100um (This is 20x)
+        
+        Scalebar = zeros(yx(1),yx(2));
+      
+        Scalebar((yx(1)*.95):(yx(1)*.95+40),floor((yx(2)*(1-.2))):(floor((yx(2)*(1-.2))+humbar)))=ones(length((yx(2)*(1-.2)):(yx(2)*(1-.2)+humbar)),length((yx(1)*.95):(yx(1)*.95)+40))';
+      %if q < 4
+      %  img2show = cat(3,Scalebar+imgToUse,Scalebar+imgToUse,Scalebar+imgToUse);    %Gray
+      %else
+          img2show = imgToUse;
+      %end
+        imshow(img2show);
+        
         if mkMerge
-            merges{ii} = cat(3,merges{ii},imadjust(imgToUse,lims));
+            merges{ii} = cat(3,merges{ii},imgToUse);
         end
         q = q + 1;
     end

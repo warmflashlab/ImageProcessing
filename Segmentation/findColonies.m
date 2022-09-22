@@ -26,6 +26,7 @@ function [colonies, cleanmask, welllabel] = findColonies(mask, range, meta, clpa
     end
     
     colRadiusPixel = meta.colRadiiPixel;
+    maxEccentricity = 0.6;
     
     if ~isfield(clparameters,'minArea') || isempty(clparameters.minArea)
         clparameters.minArea = floor(pi*min(colRadiusPixel).^2/3);
@@ -67,7 +68,7 @@ cleanmask = bwareaopen(cleanmask,clparameters.minArea);
     % remove colonies that are not round
     CC = bwconncomp(cleanmask);
     stats = regionprops(CC, 'Eccentricity', 'BoundingBox','Centroid');
-    cleanmask(cat(1,CC.PixelIdxList{[stats.Eccentricity] > 0.5})) = false;
+    cleanmask(cat(1,CC.PixelIdxList{[stats.Eccentricity] > maxEccentricity})) = false;
     
     %labelled well image
     welllabel = bwlabel(wellmask);
@@ -75,7 +76,7 @@ cleanmask = bwareaopen(cleanmask,clparameters.minArea);
     % find colonies
     %-----------------------
     
-    goodColIdx = [stats.Eccentricity] < 0.5;
+    goodColIdx = [stats.Eccentricity] < maxEccentricity;
     nColonies = sum(goodColIdx);
     if nColonies == 0
         warning('no complete colonies found');
@@ -99,7 +100,7 @@ cleanmask = bwareaopen(cleanmask,clparameters.minArea);
     
     % colony centers
     CM = cat(1,stats.Centroid);
-    CM = CM([stats.Eccentricity] < 0.5,:);
+    CM = CM([stats.Eccentricity] < maxEccentricity,:);
     
     %get wells
     well = welllabel(sub2ind(size(welllabel),floor(CM(:,2)),floor(CM(:,1))));

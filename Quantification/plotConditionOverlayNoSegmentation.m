@@ -50,7 +50,7 @@ if doubleNormalize
     end
 end
 
-colors = winter(nConditions);
+colors = distinguishable_colors(nConditions);
 
 m = 1;
 for i = 1:meta.nChannels
@@ -62,13 +62,13 @@ for i = 1:meta.nChannels
     end
     hold off
     axis([min(r{j}) max(r{j}) 0 1]);
-    legend(conditions,'location','southwest');
+    legend(conditions,'Location','Best');
     title(meta.channelLabel(i))
     
     axis square
-%     if i > 1
-%         legend off;
-%     end
+     if i > 1
+         legend off;
+     end
 end
 
 end
