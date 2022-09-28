@@ -26,7 +26,7 @@ function [colonies, cleanmask, welllabel] = findColonies(mask, range, meta, clpa
     end
     
     colRadiusPixel = meta.colRadiiPixel;
-    maxEccentricity = 0.6;
+    maxEccentricity = 0.65;
     
     if ~isfield(clparameters,'minArea') || isempty(clparameters.minArea)
         clparameters.minArea = floor(pi*min(colRadiusPixel).^2/3);
