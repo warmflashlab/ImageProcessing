@@ -1,5 +1,4 @@
-function nuc=presubBackground_self(nuc)
+function nuc=presubBackground_self(nuc,backdiskrad)
 
-global userParam;
-nucbgi=imopen(nuc,strel('disk',userParam.backdiskrad));
+nucbgi=imopen(nuc,strel('disk',backdiskrad));
 nuc=imsubtract(nuc,nucbgi);
