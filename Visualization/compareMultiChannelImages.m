@@ -1,4 +1,4 @@
-function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwindow,toplabels,sidelabels,mkMerge)
+function compareMultiChannelImages(imgs,condToUseForChan,limToUseForChan,cropwindow,toplabels,sidelabels,mkMerge,mergeChanToUse)
 %Function to make composite image comparing multi-channel images each
 %channel on a consistent look up table.
 % imgs = cell array of multichannel images (m x n x q array where m x n is image
@@ -30,6 +30,10 @@ nimgs = length(imgs);
 
 if ~exist('mkMerge','var')
     mkMerge = false;
+end
+
+if ~exist('mergeChanToUse','var')
+    mergeChanToUse = 1:nchan;
 end
 
 if mkMerge
@@ -110,7 +114,7 @@ for chan = 1:upLim
       %end
         imshow(img2show);
         
-        if mkMerge
+        if mkMerge && sum(mergeChanToUse == chan) > 0
             merges{ii} = cat(3,merges{ii},imgToUse);
         end
         q = q + 1;

@@ -44,11 +44,8 @@ classdef Metadata
     
     methods
         
-        function this = Metadata(filename,skipPixSize)
-            
-            if ~exist('skipPixSize','var')
-                skipPixSize = false;
-            end
+        function this = Metadata(filename)
+           
             if nargin == 1
                 this = this.read(filename);
                 this.filename = filename;
