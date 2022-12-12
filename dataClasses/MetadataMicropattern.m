@@ -14,12 +14,10 @@ classdef MetadataMicropattern < Metadata
     
     methods
         
-        function this = MetadataMicropattern(filename,skipPixSize)
-                if ~exist('skipPixSize','var')
-                    skipPixSize = false;
-                end
+        function this = MetadataMicropattern(filename)
+         
           
-                this = this@Metadata(filename,skipPixSize);
+                this = this@Metadata(filename);
             
             
             % default margin outside colony to process, in pixels
