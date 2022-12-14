@@ -15,9 +15,8 @@ classdef MetadataMicropattern < Metadata
     methods
         
         function this = MetadataMicropattern(filename)
-         
-          
-                this = this@Metadata(filename);
+            
+            this = this@Metadata(filename);
             
             
             % default margin outside colony to process, in pixels

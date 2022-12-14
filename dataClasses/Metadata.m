@@ -45,7 +45,7 @@ classdef Metadata
     methods
         
         function this = Metadata(filename)
-           
+            
             if nargin == 1
                 this = this.read(filename);
                 this.filename = filename;
@@ -93,6 +93,35 @@ classdef Metadata
             %omeMeta.getPixelsType(0);
             
             this.raw = char(omeMeta.dumpXML());
+        end
+        
+        function this = setDefaults(this,magnification)
+            
+            if ~exist('magnification','var')
+                magnification = '20X';
+            end
+            
+            switch magnification
+                case '10X'
+                    this.xres = 1.25;
+                    this.yres = 1.25;
+                case '20X'
+                    this.xres = 0.625;
+                    this.yres = 0.625;
+                case '30X'
+                    this.xres = 0.4167;
+                    this.yres = 0.4167;
+                case '40X'
+                    this.xres = 0.3125;
+                    this.yres = 0.3125;
+                case '60X'
+                    this.xres = 0.2083;
+                    this.yres = 0.2083;
+                case '100X'
+                    this.xres = 0.125;
+                    this.yres = 0.125;
+            end
+            
         end
         
         function save(this)
