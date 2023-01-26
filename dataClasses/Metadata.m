@@ -25,6 +25,7 @@ classdef Metadata
         
         channelLabel        % names given to channels by hand,
         % e.g. labeled protein
+        nuclearChannel % number of channel corresponding to nuclei
         
         nTime               % number of time points
         timeInterval
@@ -95,7 +96,15 @@ classdef Metadata
             this.raw = char(omeMeta.dumpXML());
         end
         
-        function this = setDefaults(this,magnification)
+        function this = setAllMetaDefaults(this,magnification)
+            meta.channelLabel = {'DAPI','Cdx2','Sox2','Bra'};
+            meta.colRadiiMicron = [200 500 800 1000]/2;
+            meta.colMargin = 10; % margin outside colony to process, in pixels
+            s = round(20/meta.xres);
+            adjustmentFactor = [];
+        end
+        
+        function this = setDefaultResolution(this,magnification)
             
             if ~exist('magnification','var')
                 magnification = '20X';
