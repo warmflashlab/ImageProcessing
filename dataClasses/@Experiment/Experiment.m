@@ -1,6 +1,6 @@
 classdef Experiment < handle
     properties
-        processedData %An array of either Position or Colony objects
+        data %An array of either Position or Colony objects
         metaData %appropriate metadata object.
         processedImageDirectory
         rawImageDirectory
