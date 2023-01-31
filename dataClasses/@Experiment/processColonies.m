@@ -32,10 +32,10 @@ for mm = 1:nImages %main processing loop
 
 
     disp('determine threshold');
-    forIlim = img(:,:,ci);
+    forIlim = img(:,:,DAPIchannel);
     t = thresholdMP(forIlim, adjustmentFactor);
 
-    mask = img(:,:,DAPIChannel) > t;
+    mask = forIlim > t;
 
     disp('find colonies');
     %actually finds the colonies

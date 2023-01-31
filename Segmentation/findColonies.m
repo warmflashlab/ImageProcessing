@@ -140,7 +140,7 @@ colymax = ceil(colymin) + 2*Rmax;
 contained = (colxmin > range(1)) & (colxmax < range(2)) &...
     (colymin > range(3)) & (colymax < range(4));
 if ~clparameters.checkcontained
-    contained = true;
+    contained = true(length(contained),1);
 end
 %leads to trouble if you allow negative values here
 colrange = [max(colxmin,range(1)) min(colxmax,range(2)) max(colymin,range(3)) min(colymax,range(4))];

@@ -8,8 +8,7 @@ classdef Colony < Position
     properties
 
         center          % x-y pixel coordinates of center (relative to btf)
-        well            % well located in
-        plate  % plate located in
+      
         % different from cellTracker: 
         %------------------------------
         

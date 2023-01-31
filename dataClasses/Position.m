@@ -9,7 +9,9 @@ classdef Position < handle
         
         ncells              % number of cells
         density             % cell density
-        
+        well            % well located in
+        plate  % plate located in
+        condition % linear index for conditions
         cellData            % structure array indexed by time:
         % - XY
         % - area
