@@ -32,7 +32,7 @@ for mm = 1:nImages %main processing loop
 
 
     disp('determine threshold');
-    forIlim = img(:,:,DAPIchannel);
+    forIlim = img(:,:,DAPIChannel);
     t = thresholdMP(forIlim, adjustmentFactor);
 
     mask = forIlim > t;
