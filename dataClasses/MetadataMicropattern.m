@@ -29,7 +29,7 @@ classdef MetadataMicropattern < Metadata
                 disp('Need to set .xres and .colRadiiMicron before running this function');
                 return;
             end
-            this.colRadiiPixel = this.colRadiiMicron*this.xres;
+            this.colRadiiPixel = this.colRadiiMicron/this.xres;
 
 
         end
