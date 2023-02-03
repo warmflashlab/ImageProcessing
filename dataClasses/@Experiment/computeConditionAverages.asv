@@ -1,0 +1,57 @@
+function computeConditionAverages(this)
+
+colonies = this.data;
+meta = this.metaData;
+
+sizes = meta.colRadiiMicron;
+nSizes = numel(sizes);
+
+DAPIChannel = meta.nuclearChannel;
+
+%restrict to colonies of the correct size
+inds = [colonies.radiusMicron] == sizes(1);
+colonies = colonies(inds);
+
+r = imfilter(colonies(1).radialProfile.BinEdges,[1 1]/2)*meta.xres;
+r(1) = colonies(1).radialProfile.BinEdges(1)*meta.xres;
+r = r(1:end-1);
+colCat = cat(3,colonies(:).radialProfile);
+ncol = length(colonies);
+
+nucAll = cat(3,colCat.NucAvg);
+nucAvg = mean(nucAll,3);
+nucStdErr = std(nucAll,[],3)/sqrt(ncol);
+norm = max(nucAvg) - min(nucAvg);
+nucAvg01 = bsxfun(@minus,nucAvg,min(nucAvg));
+nucAvg01 = bsxfun(@rdivide,nucAvg01',norm');
+nucStdErr01 = bsxfun(@rdivide,nucStdErr',norm');
+
+
+if ~isempty(DAPIChannel)
+    nucAllDAPINormalize = bsxfun(@rdivide,nucAll,nucAll(:,DAPIChannel,:));
+    nucAvgDAPINormalize = mean(nucAllDAPINormalize,3);
+    nucStdErrDAPINormalize =std(nucAllDAPINormalize,[],3)/sqrt(ncol);
+    % make a version scaled from 0 to 1
+    norm = max(nucAvgDAPINormalize) - min(nucAvgDAPINormalize);
+    nucAvgDAPINormalize01 = bsxfun(@minus, nucAvgDAPINormalize, min(nucAvgDAPINormalize));
+    nucAvgDAPINormalize01 = bsxfun(@rdivide, nucAvgDAPINormalize01', norm')';
+    nucStdErrDAPINormalize01 = bsxfun(@rdivide,nucStdErrDAPINormalize',norm');
+else
+    nucAvgDAPINormalize = [];
+    nucAvgDAPINormalize01 = [];
+    nucStdErrDAPINormalize01 = [];
+end
+
+output = struct('nucAvg', nucAvg,...
+    'nucAvg01',nucAvg
+    'nucAvgDAPINormalize', nucAvgAllDAPINormalize,...
+    'nucAvgDAPINormalize01', nucAvgDAPINormalize01,...
+    'r',r,...
+    'colSize',colSize,...
+    'nucStd',nucStdErr,'nucStdErr01',nucStdErr01,...
+    'nucStdErrDAPINormalize',nucStdErrDAPINormalize,...
+        'nucStdErrDAPINormalize01',nucStdErrDAPINormalize01);
+    
+    this.conditionAveragesNuc = output;
+
+

@@ -7,6 +7,7 @@ classdef Experiment < handle
         experimentType % Standard (std) or micropattern (mp)
         imageNameStruct
         processingParameters %for storing image processing
+        conditionAverages
     end
     methods
         %constructor

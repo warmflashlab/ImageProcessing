@@ -49,10 +49,33 @@ maxI = 0*(1:meta.nChannels);
 
 for i = 1:n
     [radialAvgNuc{i}, radialErrNuc{i}, r{i}] = this.computeConditionAverages(...
-        colSize,useCondition(i),DAPInormalize,zeroOneNorm);
-      subplot_tight(m,n,i,0.02)
+        colSize,useCondition(i),DAPInormalize,zeroOneNorm));
+    
+    
+    
+    if DAPInormalize
+        radialAvgNuc{i} = radialAvg.nucAvgDAPINormalized;
+    else
+        radialAvgNuc{i} = radialAvg.nucAvg;
+    end
+    radialAvgStd{i} = radialAvg.nucStd;
+    r{i} = radialAvg.r;
+    
+    % for overall normalization
+    % throw out bins from edge when setting LUT
+    % to prevent setting minimum by areas without cells
+    Imargin = 6;
+    minI = min(minI, min(radialAvgNuc{i}(1:end-Imargin,:)));
+    maxI = max(maxI, max(radialAvgNuc{i}(1:end-Imargin,:)));
+end
+
+
+
+for i = 1:n
+    
+    subplot_tight(m,n,i,0.02)
     if plotErrors
-        errorbar(r{i}(ones(length(chansToPlot),1),:)',radialAvgNuc{i}(:,chansToPlot),radialErrNuc{i}(:,chansToPlot),'.-','LineWidth',3);
+        errorbar(r{i}(ones(length(chansToPlot),1),:)',radialAvgNuc{i}(:,chansToPlot),radialAvgNuc{i}(:,chansToPlot),'.-','LineWidth',3);
     else
         plot(r{i}, radialAvgNuc{i}(:,chansToPlot),'.-','LineWidth',3)
     end
@@ -66,7 +89,6 @@ for i = 1:n
     if i > 1
         legend off;
     end
-    
-    
- 
+end
+
 end

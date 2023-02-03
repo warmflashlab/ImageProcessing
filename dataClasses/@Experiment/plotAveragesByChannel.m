@@ -5,7 +5,6 @@ function [radialAvgNuc, r] = plotAveragesByChannel(this,...
 % first normalize by DAPI, then scale all profiles from 0 to 1 on the same
 % scale
 
-allColonies = this.data;
 meta = this.metaData;
 
 if ~exist('DAPInormalize','var') || isempty(DAPInormalize)
@@ -32,7 +31,7 @@ else
     chansToPlot = useChan;
 end
 
-conditions = unique([allColonies.condition]);
+conditions = unique([this.data.condition]);
 conditionNames = this.metaData.conditions;
 
 if ~exist('useCondition','var') || isempty(useCondition)
@@ -48,32 +47,10 @@ maxI = 0*(1:meta.nChannels);
 
 for i = 1:nConditions
     
-    colonies = allColonies([allColonies.condition]==useCondition(i));
     
-    radialAvg = makeAveragesNoSegmentation(...
-                    meta, colSize, DAPIChannel, colonies);
+    [radialAvgNuc{i} radialErrNuc{i} r{i}]= this.computeConditionAverages(...
+        colSize,useCondition(i),DAPInormalize,zeroOneNorm);
     
-    if DAPInormalize
-        radialAvgNuc{i} = radialAvg.nucAvgDAPINormalized;
-    else
-        radialAvgNuc{i} = radialAvg.nucAvg;
-    end
-    r{i} = radialAvg.r;    
-    
-    % for overall normalization
-    % throw out 2 bins from edge when setting LUT
-    % to prevent setting minimum by areas without cells
-    Imargin = 6; 
-    minI = min(minI, min(radialAvgNuc{i}(1:end-Imargin,:)));
-    maxI = max(maxI, max(radialAvgNuc{i}(1:end-Imargin,:)));
-end
-
-if zeroOneNorm
-    for i = 1:nConditions
-        for ci = 1:meta.nChannels
-            radialAvgNuc{i}(:,ci) = (radialAvgNuc{i}(:,ci) - minI(ci))/(maxI(ci)-minI(ci));
-        end
-    end
 end
 
 colors = distinguishable_colors(nConditions);
@@ -84,10 +61,16 @@ for i = 1:length(chansToPlot)
     subplot_tight(m,length(chansToPlot),i,0.02)
     hold on
     for j = 1:nConditions
+        if plotErrors
+            errorbar(r{j},radialAvgNuc{j}(:,chansToPlot(i)),radialErrNuc{j}(:,chansToPlot(i)),'.-','LineWidth',3,'Color',colors(j,:));
+        else
         plot(r{j}, radialAvgNuc{j}(:,chansToPlot(i)),'.-','LineWidth',3,'Color',colors(j,:))
+        end
     end
     hold off
+    if zeroOneNorm
     axis([min(r{j}) max(r{j}) 0 1]);
+    end
     legend(conditionNames(useCondition),'Location','Best');
     title(meta.channelLabel(chansToPlot(i)))
     
