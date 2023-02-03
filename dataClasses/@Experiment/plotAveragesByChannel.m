@@ -1,5 +1,5 @@
-function [radialAvgNuc, r] = plotAveragesByCondition(this,...
-    colSize,DAPInormalize,zeroOneNorm,useChan,useCondition,plotErrors)
+function [radialAvgNuc, r] = plotAveragesByChannel(this,...
+                         colSize,DAPInormalize,zeroOneNorm,useChan,useCondition,plotErrors)
 
 % doubleNormalize: boolean
 % first normalize by DAPI, then scale all profiles from 0 to 1 on the same
@@ -39,65 +39,62 @@ if ~exist('useCondition','var') || isempty(useCondition)
     useCondition = conditions;
 end
 
-n = numel(useCondition);
 
-m = 1;
+nConditions = numel(useCondition);
 radialAvgNuc = {};
 r = {};
 minI = Inf*(1:meta.nChannels);
 maxI = 0*(1:meta.nChannels);
 
-for i = 1:n
+for i = 1:nConditions
+    
     colonies = allColonies([allColonies.condition]==useCondition(i));
+    
     radialAvg = makeAveragesNoSegmentation(...
-        meta, colSize, meta.nuclearChannel, colonies);
-    
-    %chans = 1:length(meta.channelLabel);
-    
+                    meta, colSize, DAPIChannel, colonies);
     
     if DAPInormalize
         radialAvgNuc{i} = radialAvg.nucAvgDAPINormalized;
     else
         radialAvgNuc{i} = radialAvg.nucAvg;
     end
-    radialAvgStd{i} = radialAvg.nucStd;
-    r{i} = radialAvg.r;
+    r{i} = radialAvg.r;    
     
     % for overall normalization
-    % throw out bins from edge when setting LUT
+    % throw out 2 bins from edge when setting LUT
     % to prevent setting minimum by areas without cells
-    Imargin = 6;
+    Imargin = 6; 
     minI = min(minI, min(radialAvgNuc{i}(1:end-Imargin,:)));
     maxI = max(maxI, max(radialAvgNuc{i}(1:end-Imargin,:)));
 end
 
 if zeroOneNorm
-    for i = 1:n
+    for i = 1:nConditions
         for ci = 1:meta.nChannels
             radialAvgNuc{i}(:,ci) = (radialAvgNuc{i}(:,ci) - minI(ci))/(maxI(ci)-minI(ci));
-            radialStdNuc{i}(:,ci) = radialAvgStd{i}(:,ci)/(maxI(ci)-minI(ci));
         end
     end
 end
 
-for i = 1:n
+colors = distinguishable_colors(nConditions);
+
+m = 1;
+for i = 1:length(chansToPlot)
     
-    subplot_tight(m,n,i,0.02)
-    if plotErrors
-        errorbar(r{i}(ones(length(chansToPlot),1),:)',radialAvgNuc{i}(:,chansToPlot),radialAvgNuc{i}(:,chansToPlot),'.-','LineWidth',3);
-    else
-        plot(r{i}, radialAvgNuc{i}(:,chansToPlot),'.-','LineWidth',3)
+    subplot_tight(m,length(chansToPlot),i,0.02)
+    hold on
+    for j = 1:nConditions
+        plot(r{j}, radialAvgNuc{j}(:,chansToPlot(i)),'.-','LineWidth',3,'Color',colors(j,:))
     end
-    if zeroOneNorm
-        axis([min(r{i}) max(r{i}) 0 1]);
-    end
-    legend(meta.channelLabel(chansToPlot),'Location','Best');
-    title(conditionNames{useCondition(i)})
+    hold off
+    axis([min(r{j}) max(r{j}) 0 1]);
+    legend(conditionNames(useCondition),'Location','Best');
+    title(meta.channelLabel(chansToPlot(i)))
     
     axis square
-    if i > 1
-        legend off;
-    end
+     if i > 1
+         legend off;
+     end
 end
 
 end
