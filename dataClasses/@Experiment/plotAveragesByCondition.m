@@ -1,5 +1,5 @@
 function [radialAvgNuc, r] = plotAveragesByCondition(this,...
-     colSize,DAPInormalize,zeroOneNorm,useChan,plotErrors)
+    colSize,DAPInormalize,zeroOneNorm,useChan,useCondition,plotErrors)
 
 % doubleNormalize: boolean
 % first normalize by DAPI, then scale all profiles from 0 to 1 on the same
@@ -8,20 +8,34 @@ function [radialAvgNuc, r] = plotAveragesByCondition(this,...
 allColonies = this.data;
 meta = this.metaData;
 
-if ~exist('zeroOneNorm','var')
+if ~exist('zeroOneNorm','var') || isempty(zeroOneNorm)
     zeroOneNorm = false;
 end
 
-if ~exist('plotErrors','var')
+if ~exist('plotErrors','var') || isempty(plotErrors)
     plotErrors = false;
 end
 
-if ~exist('useChan','var')
+if ~exist('useChan','var') || isempty(useChan)
     useChan = 1:length(meta.channelLabel);
 end
 
+DAPIChannel = this.metaData.nuclearChannel;
+
+if DAPInormalize
+    chansToPlot = setdiff(useChan,DAPIChannel);
+else
+    chansToPlot = useChan;
+end
+
 conditions = unique([allColonies.condition]);
-n = numel(conditions);
+conditionNames = this.metaData.conditions;
+
+if ~exist('useCondition','var') || isempty(useCondition)
+    useCondition = conditions;
+end
+
+n = numel(useCondition);
 
 m = 1;
 radialAvgNuc = {};
@@ -30,12 +44,12 @@ minI = Inf*(1:meta.nChannels);
 maxI = 0*(1:meta.nChannels);
 
 for i = 1:n
-    colonies = allColonies(conditions==conditions(i));
+    colonies = allColonies([allColonies.condition]==useCondition(i));
     radialAvg = makeAveragesNoSegmentation(...
         meta, colSize, meta.nuclearChannel, colonies);
     
     %chans = 1:length(meta.channelLabel);
-    chansToPlot = setdiff(useChan,DAPIChannel);
+    
     
     if DAPInormalize
         radialAvgNuc{i} = radialAvg.nucAvgDAPINormalized;
@@ -72,7 +86,7 @@ for i = 1:n
     end
     axis([min(r{i}) max(r{i}) 0 1]);
     legend(meta.channelLabel(chansToPlot),'Location','Best');
-    title(conditions{i})
+    title(conditionNames{useCondition(i)})
     
     axis square
     if i > 1
