@@ -30,11 +30,6 @@ end
 nucAvg = mean(nucAll,3);
 nucStdErr = std(nucAll,[],3)/sqrt(ncol);
 
-if zeroOneNorm
-norm = max(nucAvg) - min(nucAvg);
-nucAvg = bsxfun(@minus,nucAvg,min(nucAvg));
-nucAvg = bsxfun(@rdivide,nucAvg',norm')';
-nucStdErr = bsxfun(@rdivide,nucStdErr',norm')';
-end
+
 
 

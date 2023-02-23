@@ -1,10 +1,6 @@
 function [radialAvgNuc, r] = plotAveragesByCondition(this,...
     colSize,DAPInormalize,zeroOneNorm,useChan,useCondition,plotErrors)
 
-% doubleNormalize: boolean
-% first normalize by DAPI, then scale all profiles from 0 to 1 on the same
-% scale
-
 allColonies = this.data;
 meta = this.metaData;
 
@@ -50,7 +46,25 @@ maxI = 0*(1:meta.nChannels);
 for i = 1:n
     [radialAvgNuc{i}, radialErrNuc{i}, r{i}] = this.computeConditionAverages(...
         colSize,useCondition(i),DAPInormalize,zeroOneNorm);
-      subplot_tight(m,n,i,0.02)
+    % for overall normalization
+    % throw out 2 bins from edge when setting LUT
+    % to prevent setting minimum by areas without cells
+    Imargin = 6;
+    minI = min(minI, min(radialAvgNuc{i}(1:end-Imargin,:)));
+    maxI = max(maxI, max(radialAvgNuc{i}(1:end-Imargin,:)));
+end
+
+if zeroOneNorm
+    for i = 1:n
+        for ci = 1:meta.nChannels
+            radialAvgNuc{i}(:,ci) = (radialAvgNuc{i}(:,ci) - minI(ci))/(maxI(ci)-minI(ci));
+            radialErrNuc{i}(:,ci) = radialErrNuc{i}(:,ci)/(maxI(ci)-minI(ci));
+        end
+    end
+end
+
+for i = 1:n
+    subplot_tight(m,n,i,0.02)
     if plotErrors
         errorbar(r{i}(ones(length(chansToPlot),1),:)',radialAvgNuc{i}(:,chansToPlot),radialErrNuc{i}(:,chansToPlot),'.-','LineWidth',3);
     else
@@ -66,7 +80,5 @@ for i = 1:n
     if i > 1
         legend off;
     end
-    
-    
  
 end
