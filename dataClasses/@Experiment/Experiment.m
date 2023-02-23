@@ -19,6 +19,7 @@ classdef Experiment < handle
             end
         end
         %list methods here but functions are in separate files
+        % (This isnt' required for the functions to run, but is useful)
         fileStruct = readRawDirectory(this) 
         filename = getFileNameFromStruct(this,imgNum)
 
