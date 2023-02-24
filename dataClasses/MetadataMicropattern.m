@@ -10,14 +10,17 @@ classdef MetadataMicropattern < Metadata
         colRadiiMicron
         colRadiiPixel
         colMargin
-        colBlah
     end
 
     methods
 
-        function this = MetadataMicropattern(filename)
+        function this = MetadataMicropattern(filename,skipPixSize)
+            
+            if ~exist("skipPixSize","var")
+                skipPixSize = false;
+            end
 
-            this = this@Metadata(filename);
+            this = this@Metadata(filename,skipPixSize);
 
 
             % default margin outside colony to process, in pixels

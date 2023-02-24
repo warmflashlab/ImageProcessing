@@ -29,6 +29,7 @@ classdef Metadata
         
         nTime               % number of time points
         timeInterval
+        ZTswapped           %T/F flag for whether z and t are swapped in bioformats
         
         nPositions
         montageOverlap      % percent overlap of montage
@@ -45,11 +46,13 @@ classdef Metadata
     
     methods
         
-        function this = Metadata(filename)
+        function this = Metadata(filename,skipPixSize)
             
             if nargin == 1
                 this = this.read(filename);
                 this.filename = filename;
+            elseif nargin == 2
+                 this = this.read(filename,skipPixSize);
             end
         end
         
@@ -172,5 +175,6 @@ classdef Metadata
             % scatter(XYZmean(:,1), XYZmean(:,2),'r')
             % hold off
         end
+
     end
 end
