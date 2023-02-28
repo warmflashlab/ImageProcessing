@@ -40,6 +40,10 @@ for mm = 1:nImages %main processing loop
     forIlim = img(:,:,DAPIChannel);
     t = thresholdMP(forIlim, adjustmentFactor);
 
+    if isfield(this.processingParameters,'minThresh') && t < this.processingParameters.minThresh
+        t = this.processingParameters.minThresh;
+    end
+
     mask = forIlim > t;
 
     disp('find colonies');
