@@ -99,17 +99,14 @@ for mm = 1:nImages %main processing loop
 
 
         % make radial average
-        colonyNow.makeRadialAvgNoSeg(colimg, colnucmask,[], meta.colMargin)
+        colonyNow.makeRadialAvgNoSeg(colimg, colnucmask,[], meta.colMargin,[],[],false)
 
         %display the preview
         if tt == 1
             makePreview(img,mask,cleanmask,meta,newColonies);
-        else
-
-            colonies(mm,tt) = colonyNow;
-            % calculate moments
-            %colonies(coli).calculateMoments(colimg);
-
+            colonies(mm) = colonyNow;
+        else 
+            colonies(mm).radialProfile(tt) = colonyNow.radialProfile;
         end
 
     end

@@ -280,20 +280,24 @@ classdef Colony < Position
             end
         end
 
-        function makeRadialAvgNoSeg(this, colimg, colnucmask, colcytmask, colmargin, ti,thresh)
+        function makeRadialAvgNoSeg(this, colimg, colnucmask, colcytmask, colmargin, ti,thresh,subBackground)
             
             % makeRadialAvgNoSeg(this, colimg, colnucmask, colcytmask, colmargin, ti)
             % colcytmask can be left empty
             % 
             
-            if ~exist('ti','var')
+            if ~exist('ti','var') || isempty(ti)
                 ti = 1;
             end
             
-            if ~exist('thresh','var')
+            if ~exist('thresh','var') || isempty(thresh)
                 thresh = -1*ones(this.nChannels,1);
             end
             
+            if ~exist("subBackground",'var') || isempty(subBackground)
+                subBackground = true;
+            end
+
             % masks for radial averages
             [radialMaskStack, edges] = makeRadialBinningMasks(...
                 this.radiusPixel, this.radiusMicron, colmargin);
@@ -361,8 +365,12 @@ classdef Colony < Position
                         % most primitive background subtraction: minimal value
                         % within the colony
                         % min(imc(colmaskClean)) doubles the computatation time
+
+                        if subBackground
+   
                         imc = imc - min(imc(:));
                         
+                        end
                         if thresh(ci) > 0
                             colnucbinmaskUse = colnucbinmask & imc < thresh(ci);
                         else
