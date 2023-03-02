@@ -444,7 +444,10 @@ classdef Colony < Position
             %             radialMaskStack{colType} = radialMaskStack{colType}(crop(3):crop(4),crop(1):crop(2),:);
             %
             xres = this.radiusMicron / this.radiusPixel;
-           
+            if isempty(colcytmask)
+                colcytmask = imdilate(colnucmask,strel('disk',round(5/xres)))-colnucmask;
+            end
+
             % do radial binning
             N = size(radialMaskStack{colType},3);
             nucradavg = zeros([N this.nChannels]);
@@ -477,7 +480,7 @@ classdef Colony < Position
                 npixTot = sum(sum(radialMaskStack{colType}(:,:,ri)));
 
                 npix = npixTot;
-
+                
                 if npix/npixTot > 0.1
 
                     for ci = 1:nChannels

@@ -50,7 +50,6 @@ for mm = 1:nImages %main processing loop
     %actually finds the colonies
     tic
     [newColonies, cleanmask] = findColonies(mask, [], meta, findColoniesParameters);
-    toc
 
     % channels to save to individual images
     % if ~exist(colDir,'dir')
@@ -99,17 +98,20 @@ for mm = 1:nImages %main processing loop
 
 
         % make radial average
-        colonyNow.makeRadialAvgNoSeg(colimg, colnucmask,[], meta.colMargin,[],[],false)
+        colonyNow.makeRadialAvgNoMask(colimg, meta.colMargin, [],[],false)
+
 
         %display the preview
         if tt == 1
             makePreview(img,mask,cleanmask,meta,newColonies);
             colonies(mm) = colonyNow;
-        else 
+        else
             colonies(mm).radialProfile(tt) = colonyNow.radialProfile;
         end
 
     end
+    toc
+
 end
 this.data = colonies;
 end

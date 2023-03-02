@@ -19,7 +19,7 @@ function [kymograph, ybins] = makeKymograph(colonies, param)
     if ~isfield(param,'trange')
         param.trange = [1 Ntime];
     end
-        figure; 
+    
     for coli = 1:numel(colonies)
 
         if ~isempty(colonies(coli).radiusPixel)
@@ -45,7 +45,7 @@ function [kymograph, ybins] = makeKymograph(colonies, param)
         end
 
         kymographs{coli} = kymograph;
-        subplot(2,3,coli); pcolor(kymograph); colorbar;
+        %subplot(2,3,coli); pcolor(kymograph); colorbar; caxis(param.Irange)
         
         end
     end
@@ -63,7 +63,6 @@ function [kymograph, ybins] = makeKymograph(colonies, param)
     thr = tframe*param.tres/60;
     ybins = linbins;
 
-    figure,
     imagesc(kymograph','YData',ybins,'XData',thr, param.Irange); %[0.35 0.45] for N/(C+N)
 
     axis square
