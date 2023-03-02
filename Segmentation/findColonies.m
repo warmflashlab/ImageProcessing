@@ -57,6 +57,7 @@ cleanmask = mask(range(3):range(4),range(1):range(2));
 %     cleanmask = bwareaopen(cleanmask,clparameters.minArea);
 
 cleanmask = imopen(cleanmask,strel('disk',clparameters.sopen));
+cleanmask = removeTooFar(cleanmask,max(meta.colRadiiPixel));
 cleanmask = imclose(cleanmask,strel('disk',clparameters.sclose));
 cleanmask = imfill(cleanmask,'holes');
 cleanmask = bwareaopen(cleanmask,clparameters.minArea);
