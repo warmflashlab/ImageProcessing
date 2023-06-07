@@ -40,7 +40,12 @@ classdef ImageDirectory < handle
 
         end
 
-        function filename = getFileNameFromStruct(this,imgNum)
+        function filename = getFileName(this,imgNum,includeDirectory)
+
+            if ~exist("includeDirectory","var")
+                includeDirectory = false;
+            end
+
             ins = this;
             filename = ins.prefix;
             ord = ins.ordering;
@@ -51,6 +56,14 @@ classdef ImageDirectory < handle
             filename = [filename ord{1} int2str(ins.plate(imgNum)) '_' ord{2} int2str(ins.well(imgNum))...
                 '_' ord{3} int2str(ins.position(imgNum)) ins.extension];
 
+            if includeDirectory
+                filename = fullfile(this.path,filename);
+            end
+
         end
+
+         function linIndex = getLinIndex(this,plate,well,pos)
+            linIndex =find( ismember(this.plate,plate) & ismember(this.well,well) & ismember(this.position,pos));
+         end
     end
 end

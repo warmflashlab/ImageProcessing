@@ -20,7 +20,7 @@ if isfield(userParam,'providedBackground') && userParam.providedBackground
     
 else
     if isfield(userParam,'presubNucBackground') && userParam.presubNucBackground
-        nuc =presubBackground_self(nuc);
+        nuc =presubBackground_self(nuc,userParam.backgroundOpenRad);
     end
     
 end
@@ -35,7 +35,7 @@ if isfield(userParam,'providedBackground') && userParam.providedBackground
 else if exist('fimg','var')
         if isfield(userParam,'presubSmadBackground') && userParam.presubSmadBackground
             for xx=1:nImages
-                fimg(:,:,xx)=presubBackground_self(fimg(:,:,xx));
+                fimg(:,:,xx)=presubBackground_self(fimg(:,:,xx),userParam.backdiskrad);
             end
         end
     end
