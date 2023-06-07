@@ -1,0 +1,34 @@
+classdef ImageDirectory < handle
+    properties
+       path
+       prefix
+       well
+       position
+       ordering
+       extension
+       pathstring
+    end
+    methods
+        function this = ImageDirectory(varargin)
+            return;
+        end
+        function setPositionNumbersFromRanges(this,plates,wells,positions)
+            npos = length(positions);
+            nplates = length(plates);
+            nwells = length(wells);
+            nimages = npos*nplates*nwells;
+            this.well = zeros(1,nimages);
+            this.position = zeros(1,nimages);
+            this.plate = zeros(1,nimages);
+
+            for pl = 1:length(plates)
+                for we = 1:length(wells)
+                    for po = 1:length(positions)
+                        this.plate = 
+                    end
+                end
+            end
+
+        end
+    end
+end
