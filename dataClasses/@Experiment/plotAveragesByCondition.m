@@ -1,5 +1,5 @@
 function [radialAvgNuc, r] = plotAveragesByCondition(this,...
-    colSize,DAPInormalize,zeroOneNorm,useChan,useCondition,plotErrors)
+    colSize,DAPInormalize,zeroOneNorm,useChan,useCondition,plotErrors,fontSize)
 
 allColonies = this.data;
 meta = this.metaData;
@@ -71,14 +71,20 @@ for i = 1:n
         plot(r{i}, radialAvgNuc{i}(:,chansToPlot),'.-','LineWidth',3)
     end
     if zeroOneNorm
-        axis([min(r{i}) max(r{i}) 0 1]);
+        axis([min(r{i}) max(r{i}) 0 1.1]);
     end
     legend(meta.channelLabel(chansToPlot),'Location','Best');
     title(conditionNames{useCondition(i)})
-    
+    xlabel('Distance from Center (\mum)');
+
     axis square
     if i > 1
         legend off;
+    else
+        ylabel('Intensity (au)')
+
     end
- 
+    if exist('fontSize','var')
+        set(gca,'FontSize',fontSize);
+    end
 end

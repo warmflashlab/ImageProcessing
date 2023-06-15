@@ -1,5 +1,5 @@
 function [radialAvgNuc, r] = plotAveragesByChannel(this,...
-                         colSize,DAPInormalize,zeroOneNorm,useChan,useCondition,plotErrors)
+                         colSize,DAPInormalize,zeroOneNorm,useChan,useCondition,plotErrors,fontSize)
 
 % doubleNormalize: boolean
 % first normalize by DAPI, then scale all profiles from 0 to 1 on the same
@@ -87,11 +87,18 @@ for i = 1:length(chansToPlot)
     end
     legend(conditionNames(useCondition),'Location','Best');
     title(meta.channelLabel(chansToPlot(i)))
-    
+        xlabel('Distance from Center (\mum)');
+
     axis square
      if i > 1
          legend off;
+     else
+         ylabel('Intensity (au)');
      end
+
+      if exist('fontSize','var')
+        set(gca,'FontSize',fontSize);
+    end
 end
 
 end
