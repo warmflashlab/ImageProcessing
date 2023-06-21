@@ -25,7 +25,29 @@ classdef ImageDirectory < handle
                 this.path = varargin{1};
             end
         end
-        
+
+        function readDirectoryThreeNumbers(this,ext)
+            if ~exist('ext','var')
+                ext = '.tif';
+            end
+            direc = this.path;
+            allfiles = dir([direc filesep '*' ext]);
+            nImages = length(allfiles);
+            this.plate = [];
+            this.well = [];
+            this.position = [];
+            for ii=1:nImages
+                [nums, strs, this.prefix] = parseFilenameThreeNumbers(allfiles(ii).name);
+                if ii == 1
+                    this.ordering = strs;
+                end
+                this.plate(ii) = nums(1);
+                this.well(ii) = nums(2);
+                this.position(ii) = nums(3);
+            end  
+            this.extension = ext;
+        end
+
         function setPositionNumbersFromRanges(this,plates,wells,positions)
             
             %Allow you to set plate, well, and position properties from
@@ -66,6 +88,7 @@ classdef ImageDirectory < handle
                 includeDirectory = false;
             end
 
+
             ins = this;
             filename = ins.prefix;
             ord = ins.ordering;
@@ -75,10 +98,6 @@ classdef ImageDirectory < handle
             end
             filename = [filename ord{1} int2str(ins.plate(imgNum)) '_' ord{2} int2str(ins.well(imgNum))...
                 '_' ord{3} int2str(ins.position(imgNum)) ins.extension];
-
-            if includeDirectory
-                filename = fullfile(this.path,filename);
-            end
 
         end
 

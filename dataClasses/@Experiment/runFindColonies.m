@@ -24,6 +24,7 @@ colNow = 1; %counter for the number of colonies
 colonies = []; % to store all colonies
 for mm = 1:nImages %main processing loop
     
+    disp(['Image ' int2str(mm)])
     %find the condition
     f = @(x) sum(ismember(x,allFilenrs(mm)));
     cond = find(cellfun(f,filenrs));
